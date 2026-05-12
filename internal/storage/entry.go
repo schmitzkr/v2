@@ -429,12 +429,12 @@ func (s *Storage) ArchiveReadEntriesWithPerFeedRetention(globalInterval time.Dur
 				(
 					(
 						e.status = $1 AND
-						e.created_at < now() - (COALESCE(f.cleanup_read_days, $2) * INTERVAL '1 day')
+						e.published_at < now() - (COALESCE(f.cleanup_read_days, $2) * INTERVAL '1 day')
 					) OR (
 						e.status = $3 AND
 						f.cleanup_include_unread IS true AND
 						f.cleanup_read_days IS NOT NULL AND
-						e.created_at < now() - (f.cleanup_read_days * INTERVAL '1 day')
+						e.published_at < now() - (f.cleanup_read_days * INTERVAL '1 day')
 					)
 				)
 			ORDER BY e.created_at ASC
