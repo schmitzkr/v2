@@ -408,6 +408,53 @@ func (s *Storage) ArchiveEntries(status string, interval time.Duration, limit in
 	return count, nil
 }
 
+// ArchiveReadEntriesWithPerFeedRetention deletes read entries using per-feed
+// cleanup_read_days when set, falling back to the global interval otherwise.
+// A single query handles both cases via COALESCE to avoid per-feed loops.
+func (s *Storage) ArchiveReadEntriesWithPerFeedRetention(globalInterval time.Duration, limit int) (int64, error) {
+	if globalInterval < 0 || limit <= 0 {
+		return 0, nil
+	}
+
+	globalDays := max(int(globalInterval/(24*time.Hour)), 1)
+
+	query := `
+		WITH to_delete AS (
+			SELECT e.id, e.feed_id, e.hash
+			FROM entries e
+			JOIN feeds f ON f.id = e.feed_id
+			WHERE
+				e.status = $1 AND
+				e.starred IS false AND
+				e.share_code = '' AND
+				e.created_at < now() - (COALESCE(f.cleanup_read_days, $2) * INTERVAL '1 day')
+			ORDER BY e.created_at ASC
+			FOR UPDATE SKIP LOCKED
+			LIMIT $3
+		), deleted AS (
+			DELETE FROM entries
+			USING to_delete
+			WHERE entries.id = to_delete.id
+			RETURNING entries.feed_id, entries.hash
+		)
+		INSERT INTO entry_tombstones (feed_id, hash)
+		SELECT feed_id, hash FROM deleted WHERE hash <> ''
+		ON CONFLICT (feed_id, hash) DO NOTHING
+	`
+
+	result, err := s.db.Exec(query, model.EntryStatusRead, globalDays, limit)
+	if err != nil {
+		return 0, fmt.Errorf(`store: unable to archive read entries with per-feed retention: %v`, err)
+	}
+
+	count, err := result.RowsAffected()
+	if err != nil {
+		return 0, fmt.Errorf(`store: unable to get the number of rows affected: %v`, err)
+	}
+
+	return count, nil
+}
+
 // SetEntriesStatus update the status of the given list of entries.
 func (s *Storage) SetEntriesStatus(userID int64, entryIDs []int64, status string) error {
 	query := `
