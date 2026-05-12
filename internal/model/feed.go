@@ -64,6 +64,7 @@ type Feed struct {
 	PushoverPriority            int       `json:"pushover_priority"`
 	ProxyURL                    string    `json:"proxy_url"`
 	CleanupReadDays             *int      `json:"cleanup_read_days"`
+	CleanupIncludeUnread        bool      `json:"cleanup_include_unread"`
 
 	// Non-persisted attributes
 	Category *Category `json:"category,omitempty"`
@@ -176,6 +177,7 @@ type FeedCreationRequest struct {
 	UrlRewriteRules             string `json:"urlrewrite_rules"`
 	ProxyURL                    string `json:"proxy_url"`
 	CleanupReadDays             *int   `json:"cleanup_read_days"`
+	CleanupIncludeUnread        bool   `json:"cleanup_include_unread"`
 }
 
 type FeedCreationRequestFromSubscriptionDiscovery struct {
@@ -215,6 +217,7 @@ type FeedModificationRequest struct {
 	DisableHTTP2                *bool   `json:"disable_http2"`
 	ProxyURL                    *string `json:"proxy_url"`
 	CleanupReadDays             *int    `json:"cleanup_read_days"`
+	CleanupIncludeUnread        *bool   `json:"cleanup_include_unread"`
 }
 
 // Patch updates a feed with modified values.
@@ -325,6 +328,10 @@ func (f *FeedModificationRequest) Patch(feed *Feed) {
 
 	if f.CleanupReadDays != nil {
 		feed.CleanupReadDays = f.CleanupReadDays
+	}
+
+	if f.CleanupIncludeUnread != nil {
+		feed.CleanupIncludeUnread = *f.CleanupIncludeUnread
 	}
 }
 
