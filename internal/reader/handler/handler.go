@@ -172,6 +172,7 @@ func CreateFeed(store *storage.Storage, userID int64, feedCreationRequest *model
 	subscription.LastModifiedHeader = responseHandler.LastModified()
 	subscription.FeedURL = responseHandler.EffectiveURL()
 	subscription.ProxyURL = feedCreationRequest.ProxyURL
+	subscription.CleanupReadDays = feedCreationRequest.CleanupReadDays
 	subscription.WithCategoryID(feedCreationRequest.CategoryID)
 	subscription.CheckedNow()
 
