@@ -424,13 +424,22 @@ func (s *Storage) ArchiveReadEntriesWithPerFeedRetention(globalInterval time.Dur
 			FROM entries e
 			JOIN feeds f ON f.id = e.feed_id
 			WHERE
-				e.status = $1 AND
 				e.starred IS false AND
 				e.share_code = '' AND
-				e.created_at < now() - (COALESCE(f.cleanup_read_days, $2) * INTERVAL '1 day')
+				(
+					(
+						e.status = $1 AND
+						e.created_at < now() - (COALESCE(f.cleanup_read_days, $2) * INTERVAL '1 day')
+					) OR (
+						e.status = $3 AND
+						f.cleanup_include_unread IS true AND
+						f.cleanup_read_days IS NOT NULL AND
+						e.created_at < now() - (f.cleanup_read_days * INTERVAL '1 day')
+					)
+				)
 			ORDER BY e.created_at ASC
 			FOR UPDATE SKIP LOCKED
-			LIMIT $3
+			LIMIT $4
 		), deleted AS (
 			DELETE FROM entries
 			USING to_delete
@@ -442,7 +451,7 @@ func (s *Storage) ArchiveReadEntriesWithPerFeedRetention(globalInterval time.Dur
 		ON CONFLICT (feed_id, hash) DO NOTHING
 	`
 
-	result, err := s.db.Exec(query, model.EntryStatusRead, globalDays, limit)
+	result, err := s.db.Exec(query, model.EntryStatusRead, globalDays, model.EntryStatusUnread, limit)
 	if err != nil {
 		return 0, fmt.Errorf(`store: unable to archive read entries with per-feed retention: %v`, err)
 	}
