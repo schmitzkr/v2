@@ -248,10 +248,11 @@ func (s *Storage) CreateFeed(feed *model.Feed) error {
 			proxy_url,
 			ignore_entry_updates,
 			language,
-			cleanup_read_days
+			cleanup_read_days,
+			cleanup_include_unread
 		)
 		VALUES
-			($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, $33)
+			($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34)
 		RETURNING
 			id
 	`
@@ -290,6 +291,7 @@ func (s *Storage) CreateFeed(feed *model.Feed) error {
 		feed.IgnoreEntryUpdates,
 		feed.Language,
 		feed.CleanupReadDays,
+		feed.CleanupIncludeUnread,
 	).Scan(&feed.ID)
 	if err != nil {
 		return fmt.Errorf(`store: unable to create feed %q: %v`, feed.FeedURL, err)
@@ -375,9 +377,10 @@ func (s *Storage) UpdateFeed(feed *model.Feed) (err error) {
 			proxy_url=$38,
 			ignore_entry_updates=$39,
 			language=$40,
-			cleanup_read_days=$41
+			cleanup_read_days=$41,
+			cleanup_include_unread=$42
 		WHERE
-			id=$42 AND user_id=$43
+			id=$43 AND user_id=$44
 	`
 	_, err = s.db.Exec(query,
 		feed.FeedURL,
@@ -421,6 +424,7 @@ func (s *Storage) UpdateFeed(feed *model.Feed) (err error) {
 		feed.IgnoreEntryUpdates,
 		feed.Language,
 		feed.CleanupReadDays,
+		feed.CleanupIncludeUnread,
 		feed.ID,
 		feed.UserID,
 	)
