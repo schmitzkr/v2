@@ -1282,6 +1282,15 @@ function initializeClickHandlers() {
     }, true);
 }
 
+function initializeCleanupRetentionToggle() {
+    const daysInput = document.getElementById("form-cleanup-read-days");
+    const checkbox = document.getElementById("form-cleanup-include-unread");
+    if (!daysInput || !checkbox) return;
+    daysInput.addEventListener("input", () => {
+        checkbox.disabled = !daysInput.value || parseInt(daysInput.value, 10) <= 0;
+    });
+}
+
 // Initialize application handlers
 initializeMainMenuHandlers();
 initializeFormHandlers();
@@ -1291,6 +1300,7 @@ initializeKeyboardShortcuts();
 initializeTouchHandler();
 initializeClickHandlers();
 initializeServiceWorker();
+initializeCleanupRetentionToggle();
 
 // Reload the page if it was restored from the back-forward cache and mark entries as read is enabled.
 window.addEventListener("pageshow", (event) => {
