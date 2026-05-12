@@ -1514,4 +1514,8 @@ var migrations = [...]func(tx *sql.Tx) error{
 		_, err = tx.Exec(`ALTER TABLE feeds ADD COLUMN cleanup_read_days integer`)
 		return err
 	},
+	func(tx *sql.Tx) (err error) {
+		_, err = tx.Exec(`ALTER TABLE feeds ADD COLUMN cleanup_include_unread boolean NOT NULL DEFAULT false`)
+		return err
+	},
 }
