@@ -185,6 +185,7 @@ type Feed struct {
 	PushoverPriority            int       `json:"pushover_priority"`
 	Icon                        *FeedIcon `json:"icon"`
 	CleanupReadDays             *int      `json:"cleanup_read_days"`
+	CleanupIncludeUnread        bool      `json:"cleanup_include_unread"`
 }
 
 // FeedCreationRequest represents the request to create a feed.
@@ -213,6 +214,7 @@ type FeedCreationRequest struct {
 	DisableHTTP2                bool   `json:"disable_http2"`
 	ProxyURL                    string `json:"proxy_url"`
 	CleanupReadDays             *int   `json:"cleanup_read_days"`
+	CleanupIncludeUnread        bool   `json:"cleanup_include_unread"`
 }
 
 // FeedModificationRequest represents the request to update a feed.
@@ -244,6 +246,7 @@ type FeedModificationRequest struct {
 	DisableHTTP2                *bool   `json:"disable_http2"`
 	ProxyURL                    *string `json:"proxy_url"`
 	CleanupReadDays             *int    `json:"cleanup_read_days"`
+	CleanupIncludeUnread        *bool   `json:"cleanup_include_unread"`
 }
 
 // FeedIcon represents the feed icon.

@@ -174,6 +174,7 @@
     "form.feed.label.block_filter_entry_rules": "Regras de Bloqueo de entradas",
     "form.feed.label.blocklist_rules": "Filtros de bloqueo baseados en RegEx",
     "form.feed.label.category": "Categoría",
+    "form.feed.label.cleanup_include_unread": "Read entry retention (days, leave blank to use global default)",
     "form.feed.label.cleanup_read_days": "Read entry retention (days, leave blank to use global default)",
     "form.feed.label.cookie": "Establecer rastros",
     "form.feed.label.crawler": "Obter contido orixinal",

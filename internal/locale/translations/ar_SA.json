@@ -186,6 +186,7 @@
     "form.feed.label.block_filter_entry_rules": "قواعد حظر المقالات",
     "form.feed.label.blocklist_rules": "مرشحات الحظر المعتمدة على Regex",
     "form.feed.label.category": "الفئة",
+    "form.feed.label.cleanup_include_unread": "Read entry retention (days, leave blank to use global default)",
     "form.feed.label.cleanup_read_days": "Read entry retention (days, leave blank to use global default)",
     "form.feed.label.cookie": "تعيين ملفات تعريف الارتباط (Cookies)",
     "form.feed.label.crawler": "جلب المحتوى الأصلي",
