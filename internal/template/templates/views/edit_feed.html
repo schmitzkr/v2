@@ -73,6 +73,9 @@
             <label><input type="checkbox" name="no_media_player" {{ if .form.NoMediaPlayer }}checked{{ end }} value="1" >  {{ t "form.feed.label.no_media_player" }} </label>
             <label><input type="checkbox" name="disabled" value="1" {{ if .form.Disabled }}checked{{ end }}> {{ t "form.feed.label.disabled" }}</label>
 
+            <label for="form-cleanup-read-days">{{ t "form.feed.label.cleanup_read_days" }}</label>
+            <input type="number" name="cleanup_read_days" id="form-cleanup-read-days" min="1" value="{{ if .form.CleanupReadDays }}{{ .form.CleanupReadDays }}{{ end }}">
+
             <div class="buttons">
                 <button type="submit" class="button button-primary" data-label-loading="{{ t "form.submit.saving" }}">{{ t "action.update" }}</button>
             </div>
