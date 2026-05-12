@@ -76,6 +76,8 @@
             <label for="form-cleanup-read-days">{{ t "form.feed.label.cleanup_read_days" }}</label>
             <input type="number" name="cleanup_read_days" id="form-cleanup-read-days" min="1" value="{{ if .form.CleanupReadDays }}{{ .form.CleanupReadDays }}{{ end }}">
 
+            <label><input type="checkbox" name="cleanup_include_unread" value="1"{{ if .form.CleanupIncludeUnread }} checked{{ end }}{{ if not .form.CleanupReadDays }} disabled{{ end }}> {{ t "form.feed.label.cleanup_include_unread" }}</label>
+
             <div class="buttons">
                 <button type="submit" class="button button-primary" data-label-loading="{{ t "form.submit.saving" }}">{{ t "action.update" }}</button>
             </div>

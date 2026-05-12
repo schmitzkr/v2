@@ -171,6 +171,7 @@
     "form.feed.label.block_filter_entry_rules": "エントリブロッキングルール",
     "form.feed.label.blocklist_rules": "正規表現ベースのブロッキングフィルター",
     "form.feed.label.category": "カテゴリ",
+    "form.feed.label.cleanup_include_unread": "Read entry retention (days, leave blank to use global default)",
     "form.feed.label.cleanup_read_days": "Read entry retention (days, leave blank to use global default)",
     "form.feed.label.cookie": "Cookie の設定",
     "form.feed.label.crawler": "オリジナルの内容を取得",

@@ -74,6 +74,7 @@ func (h *handler) showEditFeedPage(w http.ResponseWriter, r *http.Request) {
 		PushoverPriority:            feed.PushoverPriority,
 		ProxyURL:                    feed.ProxyURL,
 		CleanupReadDays:             feed.CleanupReadDays,
+		CleanupIncludeUnread:        feed.CleanupIncludeUnread,
 	}
 
 	view := view.New(h.tpl, r)
