@@ -46,6 +46,7 @@ type FeedForm struct {
 	PushoverEnabled             bool
 	PushoverPriority            int
 	ProxyURL                    string
+	CleanupReadDays             *int
 }
 
 // Merge updates the fields of the given feed.
@@ -85,6 +86,7 @@ func (f FeedForm) Merge(feed *model.Feed) *model.Feed {
 	feed.PushoverEnabled = f.PushoverEnabled
 	feed.PushoverPriority = f.PushoverPriority
 	feed.ProxyURL = f.ProxyURL
+	feed.CleanupReadDays = f.CleanupReadDays
 	return feed
 }
 
@@ -103,6 +105,13 @@ func NewFeedForm(r *http.Request) *FeedForm {
 	pushoverPriority, err := strconv.Atoi(r.FormValue("pushover_priority"))
 	if err != nil {
 		pushoverPriority = 0
+	}
+
+	var cleanupReadDays *int
+	if v := r.FormValue("cleanup_read_days"); v != "" {
+		if n, err := strconv.Atoi(v); err == nil && n > 0 {
+			cleanupReadDays = &n
+		}
 	}
 
 	return &FeedForm{
@@ -139,5 +148,6 @@ func NewFeedForm(r *http.Request) *FeedForm {
 		PushoverEnabled:             r.FormValue("pushover_enabled") == "1",
 		PushoverPriority:            pushoverPriority,
 		ProxyURL:                    r.FormValue("proxy_url"),
+		CleanupReadDays:             cleanupReadDays,
 	}
 }
