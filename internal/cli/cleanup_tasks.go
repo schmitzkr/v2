@@ -23,7 +23,7 @@ func runCleanupTasks(store *storage.Storage) {
 	}
 
 	startTime := time.Now()
-	if rowsAffected, err := store.ArchiveEntries(model.EntryStatusRead, config.Opts.CleanupArchiveReadInterval(), config.Opts.CleanupArchiveBatchSize()); err != nil {
+	if rowsAffected, err := store.ArchiveReadEntriesWithPerFeedRetention(config.Opts.CleanupArchiveReadInterval(), config.Opts.CleanupArchiveBatchSize()); err != nil {
 		slog.Error("Unable to archive read entries", slog.Any("error", err))
 	} else {
 		slog.Info("Archiving read entries completed",
