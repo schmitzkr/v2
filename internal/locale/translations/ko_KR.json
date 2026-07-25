@@ -171,6 +171,8 @@
     "form.feed.label.block_filter_entry_rules": "게시물 차단 규칙",
     "form.feed.label.blocklist_rules": "정규식 기반 차단 필터",
     "form.feed.label.category": "카테고리",
+    "form.feed.label.cleanup_include_unread": "Also apply retention to unread entries (requires retention days to be set)",
+    "form.feed.label.cleanup_read_days": "Read entry retention (days, leave blank to use global default)",
     "form.feed.label.cookie": "Cookie 설정",
     "form.feed.label.crawler": "게시물 본문도 함께 다운로드",
     "form.feed.label.ignore_entry_updates": "업데이트된 게시물 무시",
