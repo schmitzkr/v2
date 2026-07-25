@@ -171,7 +171,7 @@
     "form.feed.label.block_filter_entry_rules": "Aturan Pemblokiran Entri",
     "form.feed.label.blocklist_rules": "Filter Pemblokiran Berbasis Regex",
     "form.feed.label.category": "Kategori",
-    "form.feed.label.cleanup_include_unread": "Read entry retention (days, leave blank to use global default)",
+    "form.feed.label.cleanup_include_unread": "Also apply retention to unread entries (requires retention days to be set)",
     "form.feed.label.cleanup_read_days": "Read entry retention (days, leave blank to use global default)",
     "form.feed.label.cookie": "Atur Kuki",
     "form.feed.label.crawler": "Ambil konten asli",
