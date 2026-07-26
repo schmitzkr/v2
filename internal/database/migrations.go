@@ -1524,6 +1524,31 @@ var migrations = [...]func(tx *sql.Tx) error{
 		`)
 		return err
 	},
+	// The next two migrations (cleanup_read_days, cleanup_include_unread) are
+	// pinned here, ahead of the upstream migrations that follow, because
+	// production already ran them at this position before those upstream
+	// migrations existed. Moving them relative to the ones below would
+	// desync this schema-version counter against an already-migrated
+	// database: it tracks a single integer offset into this array, with no
+	// awareness of migration content, so anything inserted before an
+	// already-applied entry gets silently skipped forever while
+	// already-applied entries get incorrectly re-run. Any future upstream
+	// migrations must be appended after cleanup_include_unread, not before it.
+	func(tx *sql.Tx) (err error) {
+		_, err = tx.Exec(`ALTER TABLE feeds ADD COLUMN cleanup_read_days integer`)
+		return err
+	},
+	func(tx *sql.Tx) (err error) {
+		_, err = tx.Exec(`ALTER TABLE feeds ADD COLUMN cleanup_include_unread boolean NOT NULL DEFAULT false`)
+		return err
+	},
+	func(tx *sql.Tx) (err error) {
+		_, err = tx.Exec(`
+			ALTER TABLE feeds ADD COLUMN language text not null default '';
+			ALTER TABLE entries ADD COLUMN language text not null default '';
+		`)
+		return err
+	},
 	func(tx *sql.Tx) (err error) {
 		// entries_feed_idx is redundant: the unique constraint
 		// entries_feed_id_hash_key(feed_id, hash) and the explicit
@@ -1548,21 +1573,6 @@ var migrations = [...]func(tx *sql.Tx) error{
 			CREATE UNIQUE INDEX enclosures_user_entry_url_unique_idx
 				ON enclosures (user_id, entry_id, encode(sha256(url::bytea), 'hex'));
 		`)
-		return err
-	},
-	func(tx *sql.Tx) (err error) {
-		_, err = tx.Exec(`
-			ALTER TABLE feeds ADD COLUMN language text not null default '';
-			ALTER TABLE entries ADD COLUMN language text not null default '';
-		`)
-		return err
-	},
-	func(tx *sql.Tx) (err error) {
-		_, err = tx.Exec(`ALTER TABLE feeds ADD COLUMN cleanup_read_days integer`)
-		return err
-	},
-	func(tx *sql.Tx) (err error) {
-		_, err = tx.Exec(`ALTER TABLE feeds ADD COLUMN cleanup_include_unread boolean NOT NULL DEFAULT false`)
 		return err
 	},
 }
